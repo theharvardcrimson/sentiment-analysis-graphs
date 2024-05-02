@@ -15,40 +15,6 @@
   color: white;
 }
 
-/* Checkbox container */
-.checkbox-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 10px;
-}
-
-/* Color key */
-.color-key {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.color-box {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  margin-right: 5px;
-  border-radius: 3px;
-}
-
-.color-label {
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-}
-
-/* Toggle styles */
-.toggle-container {
-  display: flex;
-}
-
 .toggle-label {
   cursor: pointer;
   display: inline-block;

@@ -1,27 +1,31 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
+
+// Function to format category name for display
+export const formatCategoryName = (name) => {
+  if (name === "wokeness_index_normalized") {
+    return "Aggregate Index";
+  }
+  else if (name === "net_capitalism_normalized") {
+    return "Anticaptialism";
+  }
+  else if (name === 'net_womens_rights_normalized') {
+    return "Women's Rights"
+  }
+  else {
+    return name.replace(/_/g, ' ')
+      .replace('normalized', '')
+      .replace(/^net /i, '')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+      .trim();
+  }
+};
+
 const Graph1 = ({ selectedCategories, categoryColors }) => {
   const d3Container = useRef(null);
-
-  // Function to format category name for display
-  const formatCategoryName = (name) => {
-    if (name === "wokeness_index_normalized") {
-      return "Aggregate Index";
-    }
-    else if (name === "net_capitalism_normalized") {
-      return "Anticaptialism";
-    }
-    else {
-      return name.replace(/_/g, ' ')
-        .replace('normalized', '')
-        .replace(/^net /i, '')
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
-        .trim();
-    }
-  };
 
   useEffect(() => {
     const dataPath = `${process.env.PUBLIC_URL}/aggregates_harvard - aggregates_harvard.csv`;
@@ -47,7 +51,7 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
   const drawChart = (data) => {
     d3.select(d3Container.current).selectAll("svg").remove();
 
-    const margin = { top: 60, right: 30, bottom: 100, left: 60 }, // Increase left margin to accommodate legend
+    const margin = { top: 60, right: 30, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
       width = 800 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
@@ -87,13 +91,7 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
       .call(d3.axisLeft(y))
       .attr('font-family', 'Georgia, serif');
 
-    svg.append("text")
-      .attr("x", width / 2)
-      .attr("y", height + margin.bottom - 30)
-      .attr("text-anchor", "middle")
-      .attr("font-family", "Georgia, serif")
-      .attr("font-size", "12px")
-      .text("Caption text here: Explain what the graph represents or other insights.");
+
 
     const legendWidth = 150;
     let offsetX = 0, offsetY = 0;

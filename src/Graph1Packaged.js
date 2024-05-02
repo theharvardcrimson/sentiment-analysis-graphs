@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
-import Graph1 from './HarvardOnlyChart';
+import GraphPackaged from './GraphPackaged';
+import Graph1, { formatCategoryName } from './HarvardOnlyChart';
 
 function Graph1Packaged() {
   const categories = [
@@ -23,7 +24,7 @@ function Graph1Packaged() {
     "net_activism_normalized": "#A82931", // Crimson Red
     "net_capitalism_normalized": "#808285", // Crimson Dark Gray
     "net_administration_normalized": "#BCBEC0", // Crimson Gray
-    "net_compassion_normalized": "#E6E7E8", // Crimson Light Gray
+    "net_compassion_normalized": "#9b59b6", // Soft Purple
     "wokeness_index_normalized": "#000000" // Black
   };
 
@@ -38,53 +39,30 @@ function Graph1Packaged() {
     }));
   };
 
-  const formatCategoryName = (name) => {
-    if (name === "wokeness_index_normalized") {
-      return "Aggregate Index";
-    } else if (name === "net_capitalism_normalized") {
-      return "Anticapitalism";
-    } else {
-      return name.replace(/_/g, ' ')
-                 .replace('normalized', '')
-                 .replace(/^net /i, '')
-                 .split(' ')
-                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                 .join(' ')
-                 .trim();
-    }
-  };
 
   return (
-    <div className="App">
-       <h1 className="text-3xl">
-       Trends in Harvard Opinion Newspapers Sentiment Over Time           
-       </h1>
-
-      <div className="flex">
-        {/* Checkbox side */}
-        <div className="flex flex-col items-start p-4">
-          <h4 className='text-xl mb-2'>Selected Topics:</h4>
-          <div className="space-y-2">
-            {categories.map((category) => (
-              <label key={category} className="flex items-center whitespace-nowrap">
-                <input
-                  type="checkbox"
-                  checked={!!checkedCategories[category]}
-                  onChange={() => handleCheckboxChange(category)}
-                  className="mr-2"
-                />
-                {formatCategoryName(category)}
-              </label>
-            ))}
-          </div>
+    <GraphPackaged
+      sidebarTitle="Selected Topics:"
+      categories={categories}
+      checkedCategories={checkedCategories}
+      handleCheckboxChange={handleCheckboxChange}
+      categoryColors={categoryColors}
+      sidebar={
+        <div className='space-y-1'>
+          {categories.map((category) => (
+            <label key={category} className="flex items-center whitespace-nowrap">
+              <input
+                type="checkbox"
+                checked={!!checkedCategories[category]}
+                onChange={() => handleCheckboxChange(category)}
+                className="mr-2" />
+              {formatCategoryName(category)}
+            </label>
+          ))}
         </div>
-
-        {/* Graph side */}
-        <div className="flex-grow p-4">
-          <Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />
-        </div>
-      </div>
-    </div>
+      }
+      graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />}
+    />
   );
 }
 

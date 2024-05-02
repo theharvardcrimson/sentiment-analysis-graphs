@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Graph2CategoryRadioGroup from './AggregateSelection';
+// import Graph2CategoryRadioGroup from './AggregateSelection';
 import Graph2 from './AggregateChart';
+import GraphPackaged from './GraphPackaged';
+import { formatCategoryName } from './HarvardOnlyChart'
 
 function Graph2Packaged() {
     const categories = [
@@ -23,23 +25,23 @@ function Graph2Packaged() {
     //     console.log("Selected Category:", selectedCategory);
     // }, [selectedType, selectedCategory]);
 
+    const types = ["Full Dataset", "elite_status", "university_type", "region"];
+
     return (
-        <div className='flex flex-col items-center'>
-            <h1 className="text-3xl">
-                Trends in College Opinion Newspapers Sentiment Over Time
-            </h1>
-            <div className='flex'>
-            <Graph2CategoryRadioGroup
-                categories={categories}
-                types={["Full Dataset", "elite_status", "university_type", "region"]}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                selectedType={selectedType}
-                setSelectedType={setSelectedType}
-            />
-            <Graph2 type={selectedType} category={selectedCategory} />
-            </div>
-        </div>
+        <GraphPackaged
+            sidebarTitle="Slice By:"
+            sidebar={
+                <div className="flex flex-col space-y-1" onChange={e => setSelectedType(e.target.value)}>
+                    {types.map((category) => (
+                        <div key={category} className='whitespace-nowrap'>
+                            <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
+                            <label className="ml-2" htmlFor={category}>{formatCategoryName(category)}</label>
+                        </div>
+                    ))}
+                </div>
+            }
+            graph={<Graph2 type={selectedType} category={selectedCategory} />}
+        />
     );
 }
 

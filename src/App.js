@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './App.css';
 import Graph1Packaged from './Graph1Packaged';
 import Graph2Packaged from './Graph2Packaged';
+import GraphCaption1 from './caption1';
+import GraphCaption2 from './caption2';
 
 function App() {
   // State to keep track of which graph to display
@@ -15,7 +17,7 @@ function App() {
   return (
     <div className="App">
       {/* Container for radio button toggles */}
-      <div className="toggle-container">
+      <div className="flex">
         {/* Toggle for Graph 1 */}
         <label className={`toggle-label ${selectedGraph === 'graph1' ? 'active' : ''}`}>
           <input 
@@ -39,6 +41,7 @@ function App() {
       </div>
       {/* Conditional rendering of Graph components based on selectedGraph state */}
       {selectedGraph === 'graph1' ? <Graph1Packaged /> : <Graph2Packaged />}
+      {selectedGraph === 'graph1' ? <GraphCaption1 /> : <GraphCaption2 />}
     </div>
   );
 }

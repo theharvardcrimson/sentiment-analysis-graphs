@@ -53,7 +53,7 @@ const Graph2 = ({ type, category }) => {
     // Remove any existing SVG elements
     d3.select(d3Container.current).selectAll("svg").remove();
 
-    const margin = { top: 60, right: 30, bottom: 100, left: 60 }, // Increase left margin to accommodate legend
+    const margin = { top: 60, right: 30, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
     width = 800 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
@@ -98,15 +98,6 @@ const Graph2 = ({ type, category }) => {
     svg.append("g")
       .call(d3.axisLeft(y))
       .attr('font-family', 'Georgia, serif');
-
-    svg.append("text")
-      .attr("x", width / 2) 
-      .attr("y", height + margin.bottom - 30) 
-      .attr("text-anchor", "middle") 
-      .attr("font-family", "Georgia, serif") 
-      .attr("font-size", "12px") 
-      .text("Caption text here: Explain what the graph represents or other insights.");
-
 
     const line = d3.line()
       .x(d => x(d.year))
