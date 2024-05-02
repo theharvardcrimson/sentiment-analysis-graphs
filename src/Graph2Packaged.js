@@ -4,6 +4,7 @@ import Graph2 from './AggregateChart';
 
 function Graph2Packaged() {
     const categories = [
+        "wokeness_index_normalized",
         "net_social_justice_normalized",
         "net_racial_diversity_normalized",
         "net_womens_rights_normalized",
@@ -11,9 +12,8 @@ function Graph2Packaged() {
         "net_activism_normalized",
         "net_capitalism_normalized",
         "net_administration_normalized",
-        "net_compassion_normalized",
-        "wokeness_index_normalized"
-    ];
+        "net_compassion_normalized"
+       ];
 
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedType, setSelectedType] = useState("Show All");

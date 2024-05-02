@@ -5,6 +5,7 @@ import Graph1 from './HarvardOnlyChart';
 function Graph1Packaged() {
   // Array of sentiment categories
   const categories = [
+    "wokeness_index_normalized",
     "net_social_justice_normalized",
     "net_racial_diversity_normalized",
     "net_womens_rights_normalized",
@@ -12,8 +13,7 @@ function Graph1Packaged() {
     "net_activism_normalized",
     "net_capitalism_normalized",
     "net_administration_normalized",
-    "net_compassion_normalized",
-    "wokeness_index_normalized"
+    "net_compassion_normalized"
   ];
 
   // Object mapping sentiment categories to color codes
@@ -30,7 +30,9 @@ function Graph1Packaged() {
   };
 
   // State to keep track of selected categories
-  const [checkedCategories, setCheckedCategories] = useState({});
+  const [checkedCategories, setCheckedCategories] = useState({
+    "wokeness_index_normalized": true, 
+  });
 
   // Function to toggle selected category
   const handleCheckboxChange = (category) => {
@@ -42,14 +44,19 @@ function Graph1Packaged() {
 
   // Function to format category name for display
   const formatCategoryName = (name) => {
-    return name.replace(/_/g, ' ')
-               .replace('normalized', '')
-               .replace(/^net /i, '')
-               .split(' ')
-               .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-               .join(' ')
-               .trim();
-};
+    if (name === "wokeness_index_normalized") {
+      return "Aggregate Index";
+    } else {
+      return name.replace(/_/g, ' ')
+                 .replace('normalized', '')
+                 .replace(/^net /i, '')
+                 .split(' ')
+                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                 .join(' ')
+                 .trim();
+    }
+  };
+  
 
   return (
     <div className="App">

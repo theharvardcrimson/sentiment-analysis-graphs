@@ -66,11 +66,15 @@ const Graph2 = ({ type, category }) => {
       .attr("text-anchor", "middle")
       .attr("transform", `translate(${-margin.left / 2 - 10}, ${height / 2}) rotate(-90)`)
       .text("Sentiment");
+    
 
     const x = d3.scaleTime().domain(d3.extent(data, d => d.year)).range([0, width]);
+
+    // fixed range for y scale
+    const yDomain = [0.1, 0.4];
     const y = d3.scaleLinear()
-      .domain([Math.min(...data.map(d => d.categoryValue)), Math.max(...data.map(d => d.categoryValue))])
-      .range([height, 0]);
+    .domain(yDomain) 
+    .range([height, 0]);
 
     svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
     svg.append("g").call(d3.axisLeft(y));

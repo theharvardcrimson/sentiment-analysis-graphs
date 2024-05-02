@@ -40,7 +40,7 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
       .attr("transform", `translate(${margin.left},${margin.top})`);
   
     const x = d3.scaleTime().domain(d3.extent(data, d => d.year)).range([0, width]);
-    const y = d3.scaleLinear().domain([-0.5, 0.5]).range([height, 0]);
+    const y = d3.scaleLinear().domain([-0.3, 0.5]).range([height, 0]);
   
     svg.append("text")
       .attr("class", "axis-title")
@@ -88,12 +88,13 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
           .attr("height", 10)
           .attr("fill", categoryColors[category]);
   
-        legend.append("text")
+          legend.append("text")
           .attr("x", 15)
           .attr("y", 10)
-          .text(category.replace(/_/g, ' ').replace('normalized', '').replace(/^net /i, '').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
+          .text(category === "wokeness_index_normalized" ? "Aggregate Index" : category.replace(/_/g, ' ').replace('normalized', '').replace(/^net /i, '').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
           .style("font-size", "12px")
           .attr("fill", categoryColors[category]);
+        
   
         offsetX += legendWidth;
       }
