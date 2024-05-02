@@ -54,10 +54,9 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
     container.selectAll("svg").remove();
     container.selectAll("p").remove();
 
-    const margin = { top: 60, right: 100, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
+    const margin = { top: 60, right: 30, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
       width = 800 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
-
 
     const svg = container
       .append("svg")
@@ -95,7 +94,7 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
       .attr('font-family', 'Georgia, serif');
 
     const tooltip = container.append("p")
-      .classed('hidden text-left px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2', true);
+      .classed('hidden text-left w-64 px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2', true);
 
     const legendWidth = 150;
     let offsetX = 0, offsetY = 0;
@@ -130,6 +129,27 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
           .y(d => y(d[category]))
           .curve(d3.curveMonotoneX);
 
+        const handleMouseOver = (e, d) => {
+          if (!tooltipText[formatCategoryName(category)]) return;
+
+          tooltip.classed("hidden", false);
+
+          const fullText = tooltipText[formatCategoryName(category)];
+          tooltip.text(fullText.split(' ').slice(0, 5).join(' ') + '... (Show more)');
+
+          // move tooltip to mouse position
+          tooltip.style("left", `${e.pageX}px`)
+            .style("top", `${e.pageY}px`)
+            .on('click', () => {
+              tooltip.text(fullText);
+              tooltip.classed('cursor-pointer', false);
+            })
+            .on('mouseout', () => {
+              tooltip.classed("hidden", true);
+              tooltip.classed('cursor-pointer', true);
+            });
+        }
+
         svg.append("path")
           .datum(data)
           .attr("fill", "none")
@@ -137,26 +157,7 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
           .attr("stroke-width", 1)
           .attr("d", line)
           .attr('pointer-events', 'all')
-          .on('mouseover', (e, d) => {
-            tooltip.classed("hidden", false);
-
-            // show typename in tooltip
-            if (!tooltipText[formatCategoryName(category)]) return;
-            const fullText = tooltipText[formatCategoryName(category)];
-            tooltip.text(fullText.split(' ').slice(0, 5).join(' ') + '... (Show more)');
-
-            // move tooltip to mouse position
-            tooltip.style("left", `${e.pageX}px`)
-              .style("top", `${e.pageY}px`)
-              .on('click', () => {
-                tooltip.text(fullText);
-                tooltip.classed('cursor-pointer', false);
-              })
-              .on('mouseout', () => {
-                tooltip.classed("hidden", true);
-                tooltip.classed('cursor-pointer', true);
-              });
-          });
+          .on('mouseover', handleMouseOver);
 
         // add missing data line
         svg.append("path")
@@ -165,7 +166,9 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
           .attr("stroke", categoryColors[category])
           .attr("stroke-width", 2)
           .attr("stroke-dasharray", "5,5")
-          .attr("d", line);
+          .attr("d", line)
+          .attr('pointer-events', 'all')
+          .on('mouseover', handleMouseOver);
 
         if (offsetX + legendWidth > width) {
           offsetX = 0;

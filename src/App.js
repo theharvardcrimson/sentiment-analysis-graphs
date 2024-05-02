@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 import Graph1Packaged from './Graph1Packaged';
 import Graph2Packaged from './Graph2Packaged';
-import { tooltipText as captionText } from './tooltipText'
 
 function App() {
   // State to keep track of which graph to display
@@ -41,12 +40,12 @@ function App() {
           Graph 2
         </label>
       </div>
+
       {/* Conditional rendering of Graph components based on selectedGraph state */}
-      {selectedGraph === 'graph1' ? <Graph1Packaged setTooltipText={setTooltipText} /> : <Graph2Packaged setTooltipText={setTooltipText} />}
+      {selectedGraph === 'graph1'
+        ? <Graph1Packaged setTooltipText={setTooltipText} />
+        : <Graph2Packaged setTooltipText={setTooltipText} />}
       {/* {selectedGraph === 'graph1' ? <GraphCaption1 /> : <GraphCaption2 />} */}
-      <h4 className="max-w-lg mx-auto text-gray-600 mt-2 text-left">
-        {selectedGraph === 'graph1' ? captionText.HarvardOnlyGraph : captionText.AggregateGraph}
-      </h4>
       {/* {tooltipText && <h4 className="max-w-lg mx-auto text-gray-600 mt-2 text-left">
         {tooltipText}
       </h4>} */}

@@ -42,6 +42,7 @@ function Graph2Packaged({
                     ))}
                 </div>
             }
+            selectedGraph={'graph2'}
             graph={<Graph2 type={selectedType} category={selectedCategory} setTooltipText={setTooltipText} />}
         />
 

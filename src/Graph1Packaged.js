@@ -63,6 +63,7 @@ function Graph1Packaged({
           ))}
         </div>
       }
+      selectedGraph={'graph1'}
       graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} setTooltipText={setTooltipText} />}
     />
   );
