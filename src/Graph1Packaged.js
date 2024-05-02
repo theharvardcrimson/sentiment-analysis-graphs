@@ -3,7 +3,6 @@ import './App.css';
 import Graph1 from './HarvardOnlyChart';
 
 function Graph1Packaged() {
-  // Array of sentiment categories
   const categories = [
     "wokeness_index_normalized",
     "net_social_justice_normalized",
@@ -16,25 +15,22 @@ function Graph1Packaged() {
     "net_compassion_normalized"
   ];
 
-  // Object mapping sentiment categories to color codes
   const categoryColors = {
-    "net_social_justice_normalized": "#1f77b4",
-    "net_racial_diversity_normalized": "#ff7f0e",
-    "net_womens_rights_normalized": "#2ca02c",
-    "net_gay_rights_normalized": "#9467bd",
-    "net_activism_normalized": "#8c564b",
-    "net_capitalism_normalized": "#e377c2",
-    "net_administration_normalized": "#7f7f7f",
-    "net_compassion_normalized": "#17becf",
-    "wokeness_index_normalized": "#d62728"
+    "net_social_justice_normalized": "#004E6A", // Blue 1
+    "net_racial_diversity_normalized": "#4DAAE9", // Blue 2
+    "net_womens_rights_normalized": "#F99D1C", // Orange
+    "net_gay_rights_normalized": "#218446", // Green
+    "net_activism_normalized": "#A82931", // Crimson Red
+    "net_capitalism_normalized": "#808285", // Crimson Dark Gray
+    "net_administration_normalized": "#BCBEC0", // Crimson Gray
+    "net_compassion_normalized": "#E6E7E8", // Crimson Light Gray
+    "wokeness_index_normalized": "#000000" // Black
   };
 
-  // State to keep track of selected categories
   const [checkedCategories, setCheckedCategories] = useState({
-    "wokeness_index_normalized": true, 
+    "wokeness_index_normalized": true,
   });
 
-  // Function to toggle selected category
   const handleCheckboxChange = (category) => {
     setCheckedCategories(prevState => ({
       ...prevState,
@@ -42,10 +38,11 @@ function Graph1Packaged() {
     }));
   };
 
-  // Function to format category name for display
   const formatCategoryName = (name) => {
     if (name === "wokeness_index_normalized") {
       return "Aggregate Index";
+    } else if (name === "net_capitalism_normalized") {
+      return "Anticapitalism";
     } else {
       return name.replace(/_/g, ' ')
                  .replace('normalized', '')
@@ -56,32 +53,34 @@ function Graph1Packaged() {
                  .trim();
     }
   };
-  
 
   return (
     <div className="App">
-      {/* Header */}
       <h1> Trends in Harvard Opinion Newspapers Sentiment Over Time </h1>
-      {/* Selected Topics label */}
-      <h4 style={{ textAlign: 'left' }}>Selected Topics:</h4>
-      {/* Checkbox container */}
-      <div className="checkbox-container">
-        {/* Iterate over categories */}
-        {categories.map((category) => (
-          <label key={category}>
-            {/* Checkbox for each category */}
-            <input
-              type="checkbox"
-              checked={!!checkedCategories[category]}
-              onChange={() => handleCheckboxChange(category)}
-            />
-            {/* Display formatted category name */}
-            {formatCategoryName(category)}
-          </label>
-        ))}
+      <div className="flex">
+        {/* Checkbox side */}
+        <div className="flex flex-col items-start p-4">
+          <h4 className="text-left mb-4">Selected Topics:</h4>
+          <div className="space-y-2">
+            {categories.map((category) => (
+              <label key={category} className="flex items-center whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={!!checkedCategories[category]}
+                  onChange={() => handleCheckboxChange(category)}
+                  className="mr-2"
+                />
+                {formatCategoryName(category)}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Graph side */}
+        <div className="flex-grow p-4">
+          <Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />
+        </div>
       </div>
-      {/* Render Graph1 component with selected categories and color codes */}
-      <Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />
     </div>
   );
 }

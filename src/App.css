@@ -44,29 +44,6 @@
   align-items: center;
 }
 
-/* Dropdown container */
-.dropdown-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.dropdown-container > div {
-  margin-bottom: 20px;
-}
-
-label {
-  margin-right: 10px;
-}
-
-select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
 /* Toggle styles */
 .toggle-container {
   display: flex;
@@ -84,8 +61,4 @@ select {
 .toggle-label.active {
   background-color: crimson; 
   color: white;
-}
-
-input[type="radio"] {
-  display: none;
 }

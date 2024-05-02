@@ -6,24 +6,27 @@ const Dropdown = ({ categories, types, selectedCategory, setSelectedCategory, se
     // Function to format display name
     const formatDisplayName = (name) => {
         return name.replace(/_/g, ' ')
-                   .replace('normalized', '')
-                   .replace(/^net /i, '')
-                   .split(' ')
-                   .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                   .join(' ')
-                   .trim();
+            .replace('normalized', '')
+            .replace(/^net /i, '')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+            .trim();
     };
 
     return (
-        <div className="dropdown-container">
-            <div>
-                {/* Dropdown for selecting filter */}
-                <label htmlFor="type-select">Filter By:</label>
-                <select id="type-select" value={selectedType} onChange={e => setSelectedType(e.target.value)}>
-                    {types.map((type, index) => (
-                        <option key={index} value={type}>{formatDisplayName(type)}</option>
-                    ))}
-                </select>
+        <div className="flex flex-col items-center p-4 mb-4">
+            {/* Dropdown for selecting filter */}
+            <label className='text-xl mb-2' htmlFor="type-select">
+                Slice By:
+            </label>
+            <div className="flex flex-col space-y-1 items-start" onChange={e => setSelectedType(e.target.value)}>
+                {types.map((category) => (
+                    <div key={category}>
+                        <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
+                        <label className="whitespace-nowrap ml-2" htmlFor={category}>{formatDisplayName(category)}</label>
+                    </div>
+                ))}
             </div>
         </div>
     );

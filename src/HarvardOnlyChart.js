@@ -4,6 +4,25 @@ import * as d3 from 'd3';
 const Graph1 = ({ selectedCategories, categoryColors }) => {
   const d3Container = useRef(null);
 
+  // Function to format category name for display
+  const formatCategoryName = (name) => {
+    if (name === "wokeness_index_normalized") {
+      return "Aggregate Index";
+    } 
+    else if (name === "net_capitalism_normalized") {
+      return "Anticaptialism";
+    }
+    else {
+      return name.replace(/_/g, ' ')
+                 .replace('normalized', '')
+                 .replace(/^net /i, '')
+                 .split(' ')
+                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                 .join(' ')
+                 .trim();
+    }
+  };
+  
   useEffect(() => {
     const dataPath = `${process.env.PUBLIC_URL}/aggregates_harvard - aggregates_harvard.csv`;
     d3.csv(dataPath, d => {
@@ -28,9 +47,10 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
   const drawChart = (data) => {
     d3.select(d3Container.current).selectAll("svg").remove();
   
-    const margin = { top: 60, right: 30, bottom: 60, left: 60 },
-      width = 800 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+    const margin = { top: 60, right: 30, bottom: 60, left: 100 }, // Increase left margin to accommodate legend
+    width = 800 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
   
     const svg = d3.select(d3Container.current)
       .append("svg")
@@ -40,7 +60,10 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
       .attr("transform", `translate(${margin.left},${margin.top})`);
   
     const x = d3.scaleTime().domain(d3.extent(data, d => d.year)).range([0, width]);
-    const y = d3.scaleLinear().domain([-0.3, 0.5]).range([height, 0]);
+    const y = d3.scaleLinear().domain([
+      d3.min(Object.keys(selectedCategories).filter(c => selectedCategories[c]), category => d3.min(data, d => d[category])) - 0.03,
+      d3.max(Object.keys(selectedCategories).filter(c => selectedCategories[c]), category => d3.max(data, d => d[category])) + 0.03
+    ]).range([height, 0]);
   
     svg.append("text")
       .attr("class", "axis-title")
@@ -55,14 +78,21 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
       .attr("transform", `translate(${-margin.left / 2 - 10}, ${height / 2}) rotate(-90)`)
       .text("Sentiment");
   
-    svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
-    svg.append("g").call(d3.axisLeft(y));
+    svg.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x))
+    .attr('font-family', 'Georgia, serif');
+
+    svg.append("g")
+    .call(d3.axisLeft(y))
+    .attr('font-family', 'Georgia, serif');
   
     const legendWidth = 150;
     let offsetX = 0, offsetY = 0;
   
     Object.keys(selectedCategories).forEach((category, index) => {
       if (selectedCategories[category]) {
+        console.log(data)
         const line = d3.line()
           .x(d => x(d.year))
           .y(d => y(d[category]))
@@ -88,14 +118,13 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
           .attr("height", 10)
           .attr("fill", categoryColors[category]);
   
-          legend.append("text")
+        legend.append("text")
           .attr("x", 15)
           .attr("y", 10)
-          .text(category === "wokeness_index_normalized" ? "Aggregate Index" : category.replace(/_/g, ' ').replace('normalized', '').replace(/^net /i, '').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
+          .text(formatCategoryName(category))
           .style("font-size", "12px")
           .attr("fill", categoryColors[category]);
-        
-  
+          
         offsetX += legendWidth;
       }
     });

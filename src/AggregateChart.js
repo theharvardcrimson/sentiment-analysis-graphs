@@ -3,6 +3,18 @@ import * as d3 from 'd3';
 
 const Graph2 = ({ type, category }) => {
   const d3Container = useRef(null);
+  const customColors = {
+    'Full Dataset': '#004E6A', // Blue 1
+    'elite': ''#A82931',       // Orange
+    'non-elite': '#004E6A',   // Green
+    'midwest': '#A82931',     // Crimson Red
+    'northeast': '#004E6A',   // Blue 1
+    'south': '#F99D1C',       // Orange
+    'west': '#218446',        // Green
+    'private': '#A82931',     // Crimson Red
+    'public': '#004E6A'       // Blue 1
+  };
+  
 
   useEffect(() => {
     // Function to determine data path based on selected type
@@ -14,7 +26,7 @@ const Graph2 = ({ type, category }) => {
           return `${process.env.PUBLIC_URL}/aggregates_regions - aggregates_regions.csv`;
         case 'university_type':
           return `${process.env.PUBLIC_URL}/aggregates_university_type - aggregates_university_type.csv`;
-        case 'Show All':
+        case 'Full Dataset':
           return `${process.env.PUBLIC_URL}/aggregates_full - aggregates_full.csv`;
         default:
           return `${process.env.PUBLIC_URL}/aggregates_full - aggregates_full.csv`;
@@ -41,9 +53,9 @@ const Graph2 = ({ type, category }) => {
     // Remove any existing SVG elements
     d3.select(d3Container.current).selectAll("svg").remove();
 
-    const margin = { top: 50, right: 30, bottom: 60, left: 60 },
-        width = 800 - margin.left - margin.right,
-        height = 450 - margin.top - margin.bottom;
+    const margin = { top: 50, right: 30, bottom: 60, left: 60 };
+    const width = 800 - margin.left - margin.right;
+    const height = 450 - margin.top - margin.bottom;
 
     const svg = d3.select(d3Container.current)
       .append("svg")
@@ -66,18 +78,27 @@ const Graph2 = ({ type, category }) => {
       .attr("text-anchor", "middle")
       .attr("transform", `translate(${-margin.left / 2 - 10}, ${height / 2}) rotate(-90)`)
       .text("Sentiment");
-    
 
-    const x = d3.scaleTime().domain(d3.extent(data, d => d.year)).range([0, width]);
+    const x = d3.scaleTime()
+      // .domain(d3.extent(data, d => d.year))
+      .domain([new Date(2000, 0), new Date(2024, 0)])
+      .range([0, width]);
 
     // fixed range for y scale
-    const yDomain = [0.1, 0.4];
+    const yDomain = [0.12, 0.37];
     const y = d3.scaleLinear()
-    .domain(yDomain) 
-    .range([height, 0]);
+      .domain(yDomain)
+      .range([height, 0]);
 
-    svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
-    svg.append("g").call(d3.axisLeft(y));
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .attr('font-family', 'Georgia, serif');
+
+    svg.append("g")
+      .call(d3.axisLeft(y))
+      .attr('font-family', 'Georgia, serif');
+
 
     const line = d3.line()
       .x(d => x(d.year))
@@ -85,6 +106,7 @@ const Graph2 = ({ type, category }) => {
       .curve(d3.curveMonotoneX);
 
     const typeGroups = {
+      'Full Dataset': ['Full Dataset'],
       'elite_status': ['elite', 'non-elite'],
       'region': ['midwest', 'northeast', 'south', 'west'],
       'university_type': ['private', 'public']
@@ -92,38 +114,34 @@ const Graph2 = ({ type, category }) => {
 
     const colorKeyGroup = svg.append("g").attr("transform", `translate(0, -30)`);
 
-    // Draw lines and color key based on selected type
-    if (type === 'Show All') {
-        svg.append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 2)
-            .attr("d", line);
-    } else if (typeGroups[type]) {
-        typeGroups[type].forEach((typeName, index) => {
-            const filteredData = data.filter(d => d.typeValue === typeName);
-            svg.append("path")
-                .datum(filteredData)
-                .attr("fill", "none")
-                .attr("stroke", d3.schemeTableau10[index % 10])
-                .attr("stroke-width", 2)
-                .attr("d", line);
+    if (!(type in typeGroups)) throw new Error(`Invalid type: ${type}`);
+
+    typeGroups[type].forEach((typeName, index) => {
+      const filteredData = type === 'Full Dataset' ? data : data.filter(d => d.typeValue === typeName);
     
-            colorKeyGroup.append("rect")
-                .attr("x", index * 120)
-                .attr("width", 18)
-                .attr("height", 18)
-                .attr("fill", d3.schemeTableau10[index % 10]);
+      svg.append("path")
+        .datum(filteredData)
+        .attr("fill", "none")
+        .attr("stroke", customColors[typeName]) // Use custom color
+        .attr("stroke-width", 2)
+        .attr("d", line);
     
-            colorKeyGroup.append("text")
-                .attr("x", index * 120 + 22)
-                .attr("y", 13)
-                .text(typeName.charAt(0).toUpperCase() + typeName.slice(1))
-                .style("font-size", "12px")
-                .attr("fill", d3.schemeTableau10[index % 10]);
-        });
-    }
+      colorKeyGroup.append("rect")
+        .attr("x", index * 120)
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("fill", customColors[typeName]); // Use custom color for legend
+    
+      colorKeyGroup.append("text")
+        .attr("x", index * 120 + 22)
+        .attr("y", 13)
+        .text(typeName.charAt(0).toUpperCase() + typeName.slice(1))
+        .style("font-size", "12px")
+        .attr('font-family', 'Georgia, serif')
+        .attr("fill", customColors[typeName]); // Use custom color for text
+    });
+    
+    // }
   };
 
   return <div ref={d3Container} />;
