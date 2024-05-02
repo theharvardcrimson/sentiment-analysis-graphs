@@ -3,7 +3,9 @@ import './App.css';
 import GraphPackaged from './GraphPackaged';
 import Graph1, { formatCategoryName } from './HarvardOnlyChart';
 
-function Graph1Packaged() {
+function Graph1Packaged({
+  setTooltipText
+}) {
   const categories = [
     "wokeness_index_normalized",
     "net_social_justice_normalized",
@@ -61,7 +63,7 @@ function Graph1Packaged() {
           ))}
         </div>
       }
-      graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />}
+      graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} setTooltipText={setTooltipText} />}
     />
   );
 }

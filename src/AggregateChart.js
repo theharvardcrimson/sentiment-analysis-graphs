@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { tooltipText } from './tooltipText'
 
-const Graph2 = ({ type, category }) => {
+const Graph2 = ({ type, category, setTooltipText }) => {
   const d3Container = useRef(null);
   const customColors = {
     'Full Dataset': '#A82931',     // Crimson Red
@@ -14,7 +15,7 @@ const Graph2 = ({ type, category }) => {
     'private': '#A82931',     // Crimson Red
     'public': '#004E6A'       // Blue 1
   };
-  
+
 
   useEffect(() => {
     // Function to determine data path based on selected type
@@ -54,8 +55,8 @@ const Graph2 = ({ type, category }) => {
     d3.select(d3Container.current).selectAll("svg").remove();
 
     const margin = { top: 60, right: 30, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
-    width = 800 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+      width = 800 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select(d3Container.current)
       .append("svg")
@@ -104,6 +105,14 @@ const Graph2 = ({ type, category }) => {
       .y(d => y(d.categoryValue))
       .curve(d3.curveMonotoneX);
 
+    const tooltip = svg.append("g")
+      .attr("class", "focus")
+      .style("display", "none");
+
+    tooltip.append("text")
+      .attr("x", 9)
+      .attr("dy", ".35em");
+
     const typeGroups = {
       'Full Dataset': ['Full Dataset'],
       'elite_status': ['elite', 'non-elite'],
@@ -117,20 +126,36 @@ const Graph2 = ({ type, category }) => {
 
     typeGroups[type].forEach((typeName, index) => {
       const filteredData = type === 'Full Dataset' ? data : data.filter(d => d.typeValue === typeName);
-    
+
       svg.append("path")
         .datum(filteredData)
         .attr("fill", "none")
         .attr("stroke", customColors[typeName]) // Use custom color
         .attr("stroke-width", 2)
-        .attr("d", line);
-    
+        .attr("d", line)
+        .attr('pointer-events', 'all')
+        .on('mouseover', (e, d) => {
+          console.log("MOUSEOVER")
+          tooltip.style("display", null);
+          // show typename in tooltip
+          tooltip.select("text").text(typeName);
+        })
+        .on('mousemove', (e, d) => {
+          // move tooltip to mouse position
+          const [xPos, yPos] = d3.pointer(e);
+          tooltip.attr("transform", `translate(${xPos}, ${yPos})`);
+        })
+        .on('mouseout', () => {
+          tooltip.style("display", "none");
+          setTooltipText(null);
+        })
+
       colorKeyGroup.append("rect")
         .attr("x", index * 120)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", customColors[typeName]); // Use custom color for legend
-    
+
       colorKeyGroup.append("text")
         .attr("x", index * 120 + 22)
         .attr("y", 13)
@@ -139,8 +164,6 @@ const Graph2 = ({ type, category }) => {
         .attr('font-family', 'Georgia, serif')
         .attr("fill", customColors[typeName]); // Use custom color for text
     });
-    
-    // }
   };
 
   return <div ref={d3Container} />;

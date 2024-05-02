@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { tooltipText } from './tooltipText';
 
 
 // Function to format category name for display
@@ -8,7 +9,7 @@ export const formatCategoryName = (name) => {
     return "Aggregate Index";
   }
   else if (name === "net_capitalism_normalized") {
-    return "Anticaptialism";
+    return "Anticapitalism";
   }
   else if (name === 'net_womens_rights_normalized') {
     return "Women's Rights"
@@ -24,7 +25,7 @@ export const formatCategoryName = (name) => {
   }
 };
 
-const Graph1 = ({ selectedCategories, categoryColors }) => {
+const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
   const d3Container = useRef(null);
 
   useEffect(() => {
@@ -49,14 +50,16 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
   }, [selectedCategories, categoryColors]);
 
   const drawChart = (data) => {
-    d3.select(d3Container.current).selectAll("svg").remove();
+    const container = d3.select(d3Container.current);
+    container.selectAll("svg").remove();
+    container.selectAll("p").remove();
 
-    const margin = { top: 60, right: 30, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
+    const margin = { top: 60, right: 100, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
       width = 800 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
 
-    const svg = d3.select(d3Container.current)
+    const svg = container
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -91,7 +94,8 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
       .call(d3.axisLeft(y))
       .attr('font-family', 'Georgia, serif');
 
-
+    const tooltip = container.append("p")
+      .classed('hidden text-left px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2', true);
 
     const legendWidth = 150;
     let offsetX = 0, offsetY = 0;
@@ -130,8 +134,29 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
           .datum(data)
           .attr("fill", "none")
           .attr("stroke", categoryColors[category])
-          .attr("stroke-width", 2)
-          .attr("d", line);
+          .attr("stroke-width", 1)
+          .attr("d", line)
+          .attr('pointer-events', 'all')
+          .on('mouseover', (e, d) => {
+            tooltip.classed("hidden", false);
+
+            // show typename in tooltip
+            if (!tooltipText[formatCategoryName(category)]) return;
+            const fullText = tooltipText[formatCategoryName(category)];
+            tooltip.text(fullText.split(' ').slice(0, 5).join(' ') + '... (Show more)');
+
+            // move tooltip to mouse position
+            tooltip.style("left", `${e.pageX}px`)
+              .style("top", `${e.pageY}px`)
+              .on('click', () => {
+                tooltip.text(fullText);
+                tooltip.classed('cursor-pointer', false);
+              })
+              .on('mouseout', () => {
+                tooltip.classed("hidden", true);
+                tooltip.classed('cursor-pointer', true);
+              });
+          });
 
         // add missing data line
         svg.append("path")

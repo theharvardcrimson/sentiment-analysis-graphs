@@ -4,7 +4,9 @@ import Graph2 from './AggregateChart';
 import GraphPackaged from './GraphPackaged';
 import { formatCategoryName } from './HarvardOnlyChart'
 
-function Graph2Packaged() {
+function Graph2Packaged({
+    setTooltipText
+}) {
     const categories = [
         "wokeness_index_normalized",
         "net_social_justice_normalized",
@@ -31,17 +33,18 @@ function Graph2Packaged() {
         <GraphPackaged
             sidebarTitle="Slice By:"
             sidebar={
-                <div className="flex flex-col space-y-1" onChange={e => setSelectedType(e.target.value)}>
+                <div className="flex flex-col items-start space-y-1" onChange={e => setSelectedType(e.target.value)}>
                     {types.map((category) => (
-                        <div key={category} className='whitespace-nowrap'>
+                        <div key={category} className="whitespace-nowrap flex items-center">
                             <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
                             <label className="ml-2" htmlFor={category}>{formatCategoryName(category)}</label>
                         </div>
                     ))}
                 </div>
             }
-            graph={<Graph2 type={selectedType} category={selectedCategory} />}
+            graph={<Graph2 type={selectedType} category={selectedCategory} setTooltipText={setTooltipText} />}
         />
+
     );
 }
 
