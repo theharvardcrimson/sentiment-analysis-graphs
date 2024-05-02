@@ -22,7 +22,7 @@ Feedback
 - [X ] Upon initial display, the “wokeness index” box should be selected.
 - [ X] “Wokeness Index” should be renamed to “Aggregated Index” and should be moved so that it is the first/top box
 - [ X] “Capitalism” Attribute should be renamed to “Anticapitalism”
-- [ ] The “Selected Topics” checkboxes should appear vertically next to the Y axis of the graph.
+- [ X] The “Selected Topics” checkboxes should appear vertically next to the Y axis of the graph.
 - [ ] Caption that allows me to describe the methodology
 - [ X] Y axis should start at -0.2 ish.
 - [ ] X axis should have the year 2000 should be visible as a tick mark

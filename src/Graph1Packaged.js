@@ -56,11 +56,14 @@ function Graph1Packaged() {
 
   return (
     <div className="App">
-      <h1> Trends in Harvard Opinion Newspapers Sentiment Over Time </h1>
+       <h1 className="text-3xl">
+       Trends in Harvard Opinion Newspapers Sentiment Over Time           
+       </h1>
+
       <div className="flex">
         {/* Checkbox side */}
         <div className="flex flex-col items-start p-4">
-          <h4 className="text-left mb-4">Selected Topics:</h4>
+          <h4 className='text-xl mb-2'>Selected Topics:</h4>
           <div className="space-y-2">
             {categories.map((category) => (
               <label key={category} className="flex items-center whitespace-nowrap">

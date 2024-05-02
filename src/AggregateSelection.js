@@ -20,14 +20,15 @@ const Dropdown = ({ categories, types, selectedCategory, setSelectedCategory, se
             <label className='text-xl mb-2' htmlFor="type-select">
                 Slice By:
             </label>
-            <div className="flex flex-col space-y-1 items-start" onChange={e => setSelectedType(e.target.value)}>
-                {types.map((category) => (
-                    <div key={category}>
-                        <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
-                        <label className="whitespace-nowrap ml-2" htmlFor={category}>{formatDisplayName(category)}</label>
-                    </div>
-                ))}
-            </div>
+        <div className="flex flex-col space-y-1 items-start" onChange={e => setSelectedType(e.target.value)}>
+            {types.map((category) => (
+                <div key={category}>
+                    <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
+                    <label className="whitespace-nowrap ml-2 text-lg" htmlFor={category}>{formatDisplayName(category)}</label>
+                </div>
+            ))}
+</div>
+
         </div>
     );
 };
