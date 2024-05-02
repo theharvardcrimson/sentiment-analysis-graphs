@@ -4,9 +4,7 @@ import Graph2 from './AggregateChart';
 import GraphPackaged from './GraphPackaged';
 import { formatCategoryName } from './HarvardOnlyChart'
 
-function Graph2Packaged({
-    setTooltipText
-}) {
+function Graph2Packaged() {
     const categories = [
         "wokeness_index_normalized",
         "net_social_justice_normalized",
@@ -21,11 +19,6 @@ function Graph2Packaged({
 
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedType, setSelectedType] = useState("Full Dataset");
-
-    // useEffect(() => {
-    //     console.log("Selected Type:", selectedType);
-    //     console.log("Selected Category:", selectedCategory);
-    // }, [selectedType, selectedCategory]);
 
     const types = ["Full Dataset", "elite_status", "university_type", "region"];
 
@@ -43,7 +36,7 @@ function Graph2Packaged({
                 </div>
             }
             selectedGraph={'graph2'}
-            graph={<Graph2 type={selectedType} category={selectedCategory} setTooltipText={setTooltipText} />}
+            graph={<Graph2 type={selectedType} category={selectedCategory} />}
         />
 
     );

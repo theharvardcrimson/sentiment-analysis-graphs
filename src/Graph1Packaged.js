@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import './App.css';
 import GraphPackaged from './GraphPackaged';
 import Graph1, { formatCategoryName } from './HarvardOnlyChart';
 
-function Graph1Packaged({
-  setTooltipText
-}) {
+function Graph1Packaged() {
   const categories = [
     "wokeness_index_normalized",
     "net_social_justice_normalized",
@@ -64,7 +61,7 @@ function Graph1Packaged({
         </div>
       }
       selectedGraph={'graph1'}
-      graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} setTooltipText={setTooltipText} />}
+      graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />}
     />
   );
 }
