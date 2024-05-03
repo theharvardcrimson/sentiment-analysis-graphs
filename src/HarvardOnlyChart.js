@@ -25,6 +25,42 @@ export const formatCategoryName = (name) => {
   }
 };
 
+// gets missing data (years) and modifies data in place to include empty data points
+export const getMissingData = (data) => {
+  const missingData = [];
+  const startYear = data[0].year.getFullYear();
+  const endYear = 2023;
+
+  let prevYearData = null;
+  for (let year = startYear; year <= endYear; year += 1) {
+    const yearData = data.find(d => d.year.getFullYear() === year);
+    if (prevYearData && !yearData) {
+      missingData.push({ ...prevYearData });
+    }
+    if (!prevYearData && yearData && year > startYear) {
+      missingData.push({ ...yearData });
+      missingData.push({ year: new Date(year + 1, 0) })
+    }
+    prevYearData = yearData;
+  }
+
+  console.log(prevYearData)
+  
+  if (!prevYearData) {
+    missingData.push({ ...data[data.length - 1], year: new Date(endYear, 0) });
+  }
+
+  for (let year = startYear; year <= endYear; year += 1) {
+    if (!data.find(d => d.year.getFullYear() === year)) {
+      data.push({ year: new Date(year, 0) });
+    }
+  }
+
+  data.sort((a, b) => a.year - b.year);
+
+  return missingData;
+}
+
 const Graph1 = ({ selectedCategories, categoryColors }) => {
   const d3Container = useRef(null);
   const [tooltipContents, setTooltipContents] = useState(null);
@@ -98,91 +134,71 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
     const legendWidth = 150;
     let offsetX = 0, offsetY = 0;
 
-    const missingData = [];
-    const startYear = data[0].year.getFullYear();
-    for (let year = startYear; year <= 2024; year += 1) {
-      const prevYearData = data.find(d => d.year.getFullYear() === year - 1);
-      const yearData = data.find(d => d.year.getFullYear() === year);
-      if (prevYearData && !yearData) {
-        missingData.push({ ...prevYearData });
-      }
-      if (!prevYearData && yearData && year > startYear) {
-        missingData.push({ ...yearData });
-      }
-    }
-
-    for (let year = startYear; year <= 2024; year += 1) {
-      if (!data.find(d => d.year.getFullYear() === year)) {
-        data.push({ year: new Date(year, 0) });
-      }
-    }
-
-    data.sort((a, b) => a.year - b.year);
+    const missingData = getMissingData(data);
 
     Object.keys(selectedCategories).forEach((category, index) => {
-      if (selectedCategories[category]) {
-        console.log(data)
-        const line = d3.line()
-          .defined(d => d[category])
-          .x(d => x(d.year))
-          .y(d => y(d[category]))
-          .curve(d3.curveMonotoneX);
+      if (!selectedCategories[category]) return;
 
-        const handleMouseOver = (e, d) => {
-          const categoryName = formatCategoryName(category);
-          const fullText = tooltipText[categoryName];
-          if (!fullText) return;
+      const line = d3.line()
+        .defined(d => d[category])
+        .x(d => x(d.year))
+        .y(d => y(d[category]))
+        .curve(d3.curveMonotoneX);
 
-          setTooltipContents({
-            contents: `${categoryName} (Show more)`,
-            text: fullText,
-            x: e.pageX,
-            y: e.pageY,
-          });
-        }
+      const handleMouseOver = (e, d) => {
+        const categoryName = formatCategoryName(category);
+        const fullText = tooltipText[categoryName];
+        if (!fullText) return;
 
-        svg.append("path")
-          .datum(data)
-          .attr("fill", "none")
-          .attr("stroke", categoryColors[category])
-          .attr("stroke-width", 1)
-          .attr("d", line)
-          .attr('pointer-events', 'all')
-          .on('mouseover', handleMouseOver);
-
-        // add missing data line
-        svg.append("path")
-          .datum(missingData)
-          .attr("fill", "none")
-          .attr("stroke", categoryColors[category])
-          .attr("stroke-width", 2)
-          .attr("stroke-dasharray", "5,5")
-          .attr("d", line)
-          .attr('pointer-events', 'all')
-          .on('mouseover', handleMouseOver);
-
-        if (offsetX + legendWidth > width) {
-          offsetX = 0;
-          offsetY += 20;
-        }
-
-        const legend = svg.append("g")
-          .attr("transform", `translate(${offsetX + 15},${-30 + offsetY})`);
-
-        legend.append("rect")
-          .attr("width", 10)
-          .attr("height", 10)
-          .attr("fill", categoryColors[category]);
-
-        legend.append("text")
-          .attr("x", 15)
-          .attr("y", 10)
-          .text(formatCategoryName(category))
-          .style("font-size", "12px")
-          .attr("fill", categoryColors[category]);
-
-        offsetX += legendWidth;
+        setTooltipContents({
+          contents: `${categoryName} (Show more)`,
+          text: fullText,
+          x: e.pageX,
+          y: e.pageY,
+        });
       }
+
+      svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", categoryColors[category])
+        .attr("stroke-width", 2)
+        .attr("d", line)
+        .attr('pointer-events', 'all')
+        .on('mouseover', handleMouseOver);
+
+      // add missing data line
+      svg.append("path")
+        .datum(missingData)
+        .attr("fill", "none")
+        .attr("stroke", categoryColors[category])
+        .attr("stroke-width", 2)
+        .attr("stroke-dasharray", "5,5")
+        .attr("d", line)
+        .attr('pointer-events', 'all')
+        .on('mouseover', handleMouseOver);
+
+      if (offsetX + legendWidth > width) {
+        offsetX = 0;
+        offsetY += 20;
+      }
+
+      const legend = svg.append("g")
+        .attr("transform", `translate(${offsetX + 15},${-30 + offsetY})`);
+
+      legend.append("rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", categoryColors[category]);
+
+      legend.append("text")
+        .attr("x", 15)
+        .attr("y", 10)
+        .text(formatCategoryName(category))
+        .style("font-size", "14px")
+        .attr("fill", categoryColors[category]);
+
+      offsetX += legendWidth;
     });
   };
 

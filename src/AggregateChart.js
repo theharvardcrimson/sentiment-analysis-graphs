@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { getMissingData } from './HarvardOnlyChart';
 
 const Graph2 = ({ type, category }) => {
   const d3Container = useRef(null);
@@ -100,6 +101,7 @@ const Graph2 = ({ type, category }) => {
       .attr('font-family', 'Georgia, serif');
 
     const line = d3.line()
+      .defined(d => d.categoryValue)
       .x(d => x(d.year))
       .y(d => y(d.categoryValue))
       .curve(d3.curveMonotoneX);
@@ -118,6 +120,8 @@ const Graph2 = ({ type, category }) => {
     typeGroups[type].forEach((typeName, index) => {
       const filteredData = type === 'Full Dataset' ? data : data.filter(d => d.typeValue === typeName);
 
+      const missingData = getMissingData(filteredData);
+
       svg.append("path")
         .datum(filteredData)
         .attr("fill", "none")
@@ -125,18 +129,26 @@ const Graph2 = ({ type, category }) => {
         .attr("stroke-width", 2)
         .attr("d", line);
 
+      // missing data line
+      svg.append("path")
+        .datum(missingData)
+        .attr("fill", "none")
+        .attr("stroke", customColors[typeName]) // Use custom color
+        .attr("stroke-width", 2)
+        .attr('stroke-dasharray', '5,5')
+        .attr("d", line);
+
       colorKeyGroup.append("rect")
-        .attr("x", index * 120)
-        .attr("width", 18)
-        .attr("height", 18)
+        .attr("x", index * 150)
+        .attr("width", 10)
+        .attr("height", 10)
         .attr("fill", customColors[typeName]); // Use custom color for legend
 
       colorKeyGroup.append("text")
-        .attr("x", index * 120 + 22)
-        .attr("y", 13)
+        .attr("x", index * 150 + 22)
+        .attr("y", 10)
         .text(typeName.charAt(0).toUpperCase() + typeName.slice(1))
-        .style("font-size", "12px")
-        .attr('font-family', 'Georgia, serif')
+        .style("font-size", "14px")
         .attr("fill", customColors[typeName]); // Use custom color for text
     });
   };
