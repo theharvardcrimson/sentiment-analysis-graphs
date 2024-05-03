@@ -25,21 +25,20 @@ function Graph2Packaged() {
 
     return (
         <GraphPackaged
-            sidebarTitle="Slice By:"
-            sidebar={
-                <div className="flex flex-col items-start space-y-1" onChange={e => setSelectedType(e.target.value)}>
-                    {types.map((category) => (
-                        <div key={category} className="whitespace-nowrap flex items-center">
-                            <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
-                            <label className="ml-2" htmlFor={category}>{formatCategoryName(category)}</label>
-                        </div>
-                    ))}
-                </div>
-            }
-            selectedGraph={'graph2'}
-            graph={<Graph2 type={selectedType} category={selectedCategory} />}
+        sidebarTitle="Slice By:"
+        sidebar={
+            <div className="flex flex-col items-start space-y-1" onChange={e => setSelectedType(e.target.value)}>
+                {types.map((category) => (
+                    <div key={category} className="whitespace-nowrap flex items-center">
+                        <input type="radio" id={category} name="type" value={category} checked={selectedType === category} />
+                        <label className="ml-2" htmlFor={category}>{formatCategoryName(category)}</label>
+                    </div>
+                ))}
+            </div>
+        }
+        selectedGraph={'graph2'}
+        graph={<Graph2 type={selectedType} category={selectedCategory} />}
         />
-
     );
 }
 
