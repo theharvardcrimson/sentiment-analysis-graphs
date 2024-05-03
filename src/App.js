@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Graph1Packaged from './Graph1Packaged';
 import Graph2Packaged from './Graph2Packaged';
+// eslint-ignore no-unreachable
 
 /**
  * @deprecated

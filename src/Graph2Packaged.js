@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import Graph2CategoryRadioGroup from './AggregateSelection';
 import Graph2 from './AggregateChart';
 import GraphPackaged from './GraphPackaged';
@@ -17,6 +17,7 @@ function Graph2Packaged() {
         "net_compassion_normalized"
     ];
 
+    // eslint-disable-next-line no-unused-vars
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedType, setSelectedType] = useState("Full Dataset");
 
