@@ -11,6 +11,10 @@ function App() {
     setSelectedGraph(event.target.value);
   };
 
+  return selectedGraph === 'graph1'
+    ? <Graph1Packaged />
+    : <Graph2Packaged />;
+
   return (
     <div className="text-center p-4">
       {/* Container for radio button toggles */}
