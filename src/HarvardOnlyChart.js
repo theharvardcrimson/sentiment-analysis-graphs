@@ -43,12 +43,10 @@ export const getMissingData = (data) => {
     }
     prevYearData = yearData;
   }
-
-  console.log(prevYearData)
   
-  if (!prevYearData) {
-    missingData.push({ ...data[data.length - 1], year: new Date(endYear, 0) });
-  }
+  // if (!prevYearData) {
+  //   missingData.push({ ...data[data.length - 1], year: new Date(endYear, 0) });
+  // }
 
   for (let year = startYear; year <= endYear; year += 1) {
     if (!data.find(d => d.year.getFullYear() === year)) {

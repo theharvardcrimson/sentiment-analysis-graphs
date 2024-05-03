@@ -20,17 +20,20 @@ const Graph2 = ({ type, category }) => {
   useEffect(() => {
     // Function to determine data path based on selected type
     const getDataPath = () => {
+      const publicUrl = process.env.PUBLIC_URL;
+      // const publicUrl = 'https://raw.githubusercontent.com/theharvardcrimson/sentiment-analysis-graphs/main/public'
+
       switch (type) {
         case 'elite_status':
-          return `${process.env.PUBLIC_URL}/aggregates_elite_status - aggregates_elite_status.csv`;
+          return `${publicUrl}/aggregates_elite_status - aggregates_elite_status.csv`;
         case 'region':
-          return `${process.env.PUBLIC_URL}/aggregates_regions - aggregates_regions.csv`;
+          return `${publicUrl}/aggregates_regions - aggregates_regions.csv`;
         case 'university_type':
-          return `${process.env.PUBLIC_URL}/aggregates_university_type - aggregates_university_type.csv`;
+          return `${publicUrl}/aggregates_university_type - aggregates_university_type.csv`;
         case 'Full Dataset':
-          return `${process.env.PUBLIC_URL}/aggregates_full - aggregates_full.csv`;
+          return `${publicUrl}/aggregates_full - aggregates_full.csv`;
         default:
-          return `${process.env.PUBLIC_URL}/aggregates_full - aggregates_full.csv`;
+          return `${publicUrl}/aggregates_full - aggregates_full.csv`;
       }
     };
 

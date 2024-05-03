@@ -4,6 +4,6 @@
 
 @layer base {
     a {
-        @apply text-[#f99d1c] transition-opacity hover:opacity-50;
+        @apply text-[#a82931] transition-opacity hover:opacity-50;
     }
 }
