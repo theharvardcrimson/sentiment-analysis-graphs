@@ -40,31 +40,29 @@ function Graph1Packaged() {
 
 
   return (
-    <div className='mt-44'>
-      <GraphPackaged
-      sidebarTitle="Selected Topics:"
-      categories={categories}
-      checkedCategories={checkedCategories}
-      handleCheckboxChange={handleCheckboxChange}
-      categoryColors={categoryColors}
-      sidebar={
-        <div className='space-y-1'>
-          {categories.map((category) => (
-            <label key={category} className="flex items-center whitespace-nowrap">
-              <input
-                type="checkbox"
-                checked={!!checkedCategories[category]}
-                onChange={() => handleCheckboxChange(category)}
-                className="mr-2" />
-              {formatCategoryName(category)}
-            </label>
-          ))}
-        </div>
-      }
-      selectedGraph={'graph1'}
-      graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />}
-      />
-    </div>
+    <GraphPackaged
+    sidebarTitle="Selected Topics:"
+    categories={categories}
+    checkedCategories={checkedCategories}
+    handleCheckboxChange={handleCheckboxChange}
+    categoryColors={categoryColors}
+    sidebar={
+      <div className='space-y-1'>
+        {categories.map((category) => (
+          <label key={category} className="flex items-center whitespace-nowrap">
+            <input
+              type="checkbox"
+              checked={!!checkedCategories[category]}
+              onChange={() => handleCheckboxChange(category)}
+              className="mr-2" />
+            {formatCategoryName(category)}
+          </label>
+        ))}
+      </div>
+    }
+    selectedGraph={'graph1'}
+    graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />}
+    />
   );
 }
 
