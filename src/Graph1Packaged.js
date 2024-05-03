@@ -40,7 +40,8 @@ function Graph1Packaged() {
 
 
   return (
-    <GraphPackaged
+    <div className='mt-44'>
+      <GraphPackaged
       sidebarTitle="Selected Topics:"
       categories={categories}
       checkedCategories={checkedCategories}
@@ -62,7 +63,8 @@ function Graph1Packaged() {
       }
       selectedGraph={'graph1'}
       graph={<Graph1 selectedCategories={checkedCategories} categoryColors={categoryColors} />}
-    />
+      />
+    </div>
   );
 }
 

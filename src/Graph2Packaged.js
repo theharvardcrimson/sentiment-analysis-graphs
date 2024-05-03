@@ -24,7 +24,8 @@ function Graph2Packaged() {
     const types = ["Full Dataset", "elite_status", "university_type", "region"];
 
     return (
-        <GraphPackaged
+        <div className='mt-36'>
+            <GraphPackaged
             sidebarTitle="Slice By:"
             sidebar={
                 <div className="flex flex-col items-start space-y-1" onChange={e => setSelectedType(e.target.value)}>
@@ -38,8 +39,8 @@ function Graph2Packaged() {
             }
             selectedGraph={'graph2'}
             graph={<Graph2 type={selectedType} category={selectedCategory} />}
-        />
-
+            />
+        </div>
     );
 }
 
