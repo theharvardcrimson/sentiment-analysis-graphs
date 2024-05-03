@@ -203,12 +203,12 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
 
   return <div ref={d3Container}>
     {/* tooltip */}
-    <p className='text-left px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2'
+    <p className='text-left text-sm px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2'
       style={tooltipContents ? {
         left: tooltipContents.x,
         top: tooltipContents.y,
         cursor: tooltipContents.text ? 'pointer' : 'default',
-        width: tooltipContents.text ? 'auto' : '32rem'
+        width: tooltipContents.text ? 'auto' : '30rem'
       } : {
         display: 'none'
       }}
