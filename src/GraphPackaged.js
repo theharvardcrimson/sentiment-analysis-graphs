@@ -3,7 +3,7 @@ import { tooltipText as captionText } from './tooltipText'
 function GraphPackaged({
     sidebarTitle, sidebar, graph, selectedGraph
 }) {
-    return <div className="App">
+    return <div>
         <h1 className="text-3xl">
             Trends in Harvard Opinion Newspapers Sentiment Over Time
         </h1>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { tooltipText } from './tooltipText';
 
@@ -25,8 +25,9 @@ export const formatCategoryName = (name) => {
   }
 };
 
-const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
+const Graph1 = ({ selectedCategories, categoryColors }) => {
   const d3Container = useRef(null);
+  const [tooltipContents, setTooltipContents] = useState(null);
 
   useEffect(() => {
     const dataPath = `${process.env.PUBLIC_URL}/aggregates_harvard - aggregates_harvard.csv`;
@@ -52,7 +53,6 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
   const drawChart = (data) => {
     const container = d3.select(d3Container.current);
     container.selectAll("svg").remove();
-    container.selectAll("p").remove();
 
     const margin = { top: 60, right: 30, bottom: 50, left: 60 }, // Increase left margin to accommodate legend
       width = 800 - margin.left - margin.right,
@@ -65,7 +65,9 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const x = d3.scaleTime().domain(d3.extent(data, d => d.year)).range([0, width]);
+    const x = d3.scaleTime()
+      .domain(d3.extent(data, d => d.year))
+      .range([0, width]);
     const y = d3.scaleLinear().domain([
       d3.min(Object.keys(selectedCategories).filter(c => selectedCategories[c]), category => d3.min(data, d => d[category])) - 0.03,
       d3.max(Object.keys(selectedCategories).filter(c => selectedCategories[c]), category => d3.max(data, d => d[category])) + 0.03
@@ -92,9 +94,6 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
     svg.append("g")
       .call(d3.axisLeft(y))
       .attr('font-family', 'Georgia, serif');
-
-    const tooltip = container.append("p")
-      .classed('hidden text-left w-64 px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2', true);
 
     const legendWidth = 150;
     let offsetX = 0, offsetY = 0;
@@ -130,24 +129,16 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
           .curve(d3.curveMonotoneX);
 
         const handleMouseOver = (e, d) => {
-          if (!tooltipText[formatCategoryName(category)]) return;
+          const categoryName = formatCategoryName(category);
+          const fullText = tooltipText[categoryName];
+          if (!fullText) return;
 
-          tooltip.classed("hidden", false);
-
-          const fullText = tooltipText[formatCategoryName(category)];
-          tooltip.text(fullText.split(' ').slice(0, 5).join(' ') + '... (Show more)');
-
-          // move tooltip to mouse position
-          tooltip.style("left", `${e.pageX}px`)
-            .style("top", `${e.pageY}px`)
-            .on('click', () => {
-              tooltip.text(fullText);
-              tooltip.classed('cursor-pointer', false);
-            })
-            .on('mouseout', () => {
-              tooltip.classed("hidden", true);
-              tooltip.classed('cursor-pointer', true);
-            });
+          setTooltipContents({
+            contents: `${categoryName} (Show more)`,
+            text: fullText,
+            x: e.pageX,
+            y: e.pageY,
+          });
         }
 
         svg.append("path")
@@ -196,7 +187,26 @@ const Graph1 = ({ selectedCategories, categoryColors, setTooltipText }) => {
   };
 
 
-  return <div ref={d3Container} />;
+  return <div ref={d3Container}>
+    {/* tooltip */}
+    <p className='text-left px-2 py-1 bg-white border absolute -translate-x-full ml-16 cursor-pointer translate-y-2'
+      style={tooltipContents ? {
+        left: tooltipContents.x,
+        top: tooltipContents.y,
+        cursor: tooltipContents.text ? 'pointer' : 'default',
+        width: tooltipContents.text ? 'auto' : '32rem'
+      } : {
+        display: 'none'
+      }}
+      onClick={() => {
+        setTooltipContents(({ text, ...prev }) => ({ ...prev, contents: text }));
+      }}
+      onMouseOut={() => {
+        setTooltipContents(null);
+      }}>
+      {tooltipContents && tooltipContents.contents}
+    </p>
+  </div>
 };
 
 export default Graph1;

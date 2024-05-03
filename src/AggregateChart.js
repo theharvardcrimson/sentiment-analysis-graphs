@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { tooltipText } from './tooltipText'
 
-const Graph2 = ({ type, category, setTooltipText }) => {
+const Graph2 = ({ type, category }) => {
   const d3Container = useRef(null);
   const customColors = {
     'Full Dataset': '#A82931',     // Crimson Red
@@ -105,14 +104,6 @@ const Graph2 = ({ type, category, setTooltipText }) => {
       .y(d => y(d.categoryValue))
       .curve(d3.curveMonotoneX);
 
-    const tooltip = svg.append("g")
-      .attr("class", "focus")
-      .style("display", "none");
-
-    tooltip.append("text")
-      .attr("x", 9)
-      .attr("dy", ".35em");
-
     const typeGroups = {
       'Full Dataset': ['Full Dataset'],
       'elite_status': ['elite', 'non-elite'],
@@ -132,23 +123,7 @@ const Graph2 = ({ type, category, setTooltipText }) => {
         .attr("fill", "none")
         .attr("stroke", customColors[typeName]) // Use custom color
         .attr("stroke-width", 2)
-        .attr("d", line)
-        .attr('pointer-events', 'all')
-        .on('mouseover', (e, d) => {
-          console.log("MOUSEOVER")
-          tooltip.style("display", null);
-          // show typename in tooltip
-          tooltip.select("text").text(typeName);
-        })
-        .on('mousemove', (e, d) => {
-          // move tooltip to mouse position
-          const [xPos, yPos] = d3.pointer(e);
-          tooltip.attr("transform", `translate(${xPos}, ${yPos})`);
-        })
-        .on('mouseout', () => {
-          tooltip.style("display", "none");
-          setTooltipText(null);
-        })
+        .attr("d", line);
 
       colorKeyGroup.append("rect")
         .attr("x", index * 120)
