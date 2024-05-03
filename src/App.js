@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="text-center p-4">
       {/* Container for radio button toggles */}
-      <div className="flex">
+      <div className="h-screen flex items-center justify-center">
         {/* Toggle for Graph 1 */}
         {['graph1', 'graph2'].map((graph, index) => (
           <label key={index} className={`cursor-pointer px-2 py-1 rounded-lg ${selectedGraph === graph ? "bg-[#a82931] text-white" : ''}`}>
