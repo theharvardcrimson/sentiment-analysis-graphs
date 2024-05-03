@@ -1,13 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+// import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Graph1Packaged from './Graph1Packaged';
+import Graph2Packaged from './Graph2Packaged';
+
+const router = createBrowserRouter([
+  {
+    path: '/graph1',
+    element: <Graph1Packaged />,
+  },
+  {
+    path: '/graph2',
+    element: <Graph2Packaged />,
+  }
+])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

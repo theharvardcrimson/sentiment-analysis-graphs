@@ -82,6 +82,7 @@ const Graph1 = ({ selectedCategories, categoryColors }) => {
     }).catch(error => {
       console.error("Error loading data:", error);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategories, categoryColors]);
 
   const drawChart = (data) => {

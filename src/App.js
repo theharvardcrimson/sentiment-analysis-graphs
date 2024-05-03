@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import Graph1Packaged from './Graph1Packaged';
 import Graph2Packaged from './Graph2Packaged';
+// eslint-ignore no-unreachable
 
+/**
+ * @deprecated
+ * Router switches between Graph1 and Graph2 automatically
+ */
 function App() {
   // State to keep track of which graph to display
   const [selectedGraph, setSelectedGraph] = useState('graph1');
@@ -10,6 +15,10 @@ function App() {
   const handleRadioChange = (event) => {
     setSelectedGraph(event.target.value);
   };
+
+  return selectedGraph === 'graph1'
+    ? <Graph1Packaged />
+    : <Graph2Packaged />;
 
   return (
     <div className="text-center p-4">

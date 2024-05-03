@@ -3,8 +3,8 @@ import { tooltipText as captionText } from './tooltipText'
 function GraphPackaged({
     sidebarTitle, sidebar, graph, selectedGraph
 }) {
-    return <div>
-        <h1 className="text-3xl">
+    return <>
+        <h1 className="text-3xl text-center">
             {selectedGraph === 'graph1' ? "Progressive Sentiment in The Crimson’s Opinion Section" : "Progressive Sentiment in University Newspaper Opinion Articles"}
         </h1>
 
@@ -24,7 +24,7 @@ function GraphPackaged({
                 </h4>
             </div>
         </div>
-    </div>;
+    </>;
 }
 
 
