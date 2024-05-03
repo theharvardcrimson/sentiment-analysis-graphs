@@ -1,18 +1,18 @@
 export const tooltipText = {
     'HarvardOnlyGraph': <>
-        Source: <a href="https://www.thecrimson.com/section/opinion/">The Harvard Crimson</a>.
+        Source: The Harvard Crimson.
         Dataset consists of approximately 8,700 op-eds, staff editorials, and columns from September 19, 2001 to April 18, 2024.
-        Scores are calculated using the <a href="https://github.com/elliottmokski/GABRIEL-distribution/blob/main/README.md">Generalized Attribute Based Ratings Information Extraction Library</a>,
+        Scores are calculated using the Generalized Attribute Based Ratings Information Extraction Library,
         which returns values from one to 100. The sentiment scores are then renormalized between negative one and one. Missing years are represented by dashed lines.
     </>,
     'AggregateGraph': <>
-        Source: <a href="https://signin.lexisnexis.com/lnaccess/app/signin?back=https%3A%2F%2Fadvance.lexis.com%3A443%2Fnexis-uni%2Flaapi%2Fresearch%2Fhome%3Fcontext%3D1516831%26primaryipauth%3Dtrue&aci=nu">LexisNexis University Wire</a>.
+        Source: LexisNexis University Wire.
         Dataset consists of approximately 59,000 op-eds and editorials from September 20, 2000 to February 27, 2023. A stratified sample was calculated, with approximately 25,000 observations.
         Approximately 300 university publications are represented.
         Elite universities are coded based on US News rankings and acceptance rates.
         Non-elite universities are all universities that are not elite.
         Universities are also categorized as public or private and by state and region.
-        Scores are calculated using the <a href="https://github.com/elliottmokski/GABRIEL-distribution/blob/main/README.md">Generalized Attribute Based Ratings Information Extraction Library</a>,
+        Scores are calculated using the Generalized Attribute Based Ratings Information Extraction Library,
         which returns values from one to 100. The sentiment scores are then renormalized between negative one and one. Missing years are represented by dashed lines.
     </>,
     'Social Justice': <>
